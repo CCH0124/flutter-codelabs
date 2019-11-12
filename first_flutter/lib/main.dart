@@ -44,6 +44,8 @@ class _RandomWordsState extends State<RandomWords> {
         title: Text('Startup Name Generator'),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
+          IconButton(
+              icon: Icon(Icons.card_giftcard), onPressed: _pushCardSaved),
         ],
       ),
       body: _buildSuggestions(),
@@ -112,6 +114,54 @@ class _RandomWordsState extends State<RandomWords> {
               title: Text('Saved Suggestions'),
             ),
             body: ListView(children: divided),
+          );
+        },
+      ),
+    );
+  }
+
+  void _pushCardSaved() {
+    PageController _pageController =
+        PageController(initialPage: 1, viewportFraction: 0.8);
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          final Iterable<Widget> cards = _saved.map<Widget>(
+            (WordPair pair) {
+              return Center(
+                child: SizedBox(
+                  height: 400,
+                  width: 300,
+                  child: Card(
+                    color: Colors.white,
+                    clipBehavior: Clip.antiAlias,
+                    elevation: 10.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        pair.asPascalCase,
+                        style: _biggerFont,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Saved Card'),
+            ),
+            body: PageView.builder(
+              controller: _pageController,
+              itemCount: cards.length,
+              itemBuilder: (context, index) {
+                return cards.toList()[index];
+              },
+            ),
           );
         },
       ),
